@@ -54,9 +54,9 @@
                   </div>
                   <div class="relative mb-4">
                     <label for="time" class="leading-7 text-sm text-gray-600">Music?</label>
-                    <input type="radio" id="music-on" name="music-on" value="on">
+                    <input type="radio" id="music-on" name="music-radio" value="on">
                     <label for="music-on">On</label>
-                    <input type="radio" id="music-off" name="music-off" value="off">
+                    <input type="radio" id="music-off" name="music-radio" value="off">
                     <label for="music-off">Off</label><br>
                   </div>
                 <button class="text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">Create the Room</button>
@@ -67,9 +67,32 @@
     </div>
 
     <script>
-      fetch("/db")
-      document.getElementById("join_leave").addEventListener("click", e => {
-          window.location = "/room?name=" + document.getElementById("username").value + "&code=" + document.getElementById("code").value
+      const musicRadio = document.getElementsByName("music-radio")
+      let musicOffOrOn
+      for(i = 0; i < musicRadio.length; i++) {
+          if (musicRadio[i].checked) musicOffOrOn = musicRadio[i].checked
+      }
+
+      fetch("/db", {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body:  JSON.stringify({
+          room_name: document.getElementById("room-name").value,
+          time: document.getElementById("time").value,
+          room_music: musicOffOrOn
+        })
+      })
+      .then(res => {
+        console.log("Created room...")
+        res.json()
+        .then(_res => {
+          console.log("Room code: " + _res.room_code)
+          document.getElementById("join_leave").addEventListener("click", e => {
+              window.location = "/room?name=" + document.getElementById("username").value + "&code=" + _res.room_code
+          })
+        })
       })
     </script>
 </body>
