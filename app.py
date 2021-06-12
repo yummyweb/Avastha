@@ -49,7 +49,8 @@ def room():
     db = firebase.database()
     try:
         room_name = db.child(room_code).get().val()['room_name']
-        return render_template('room.html', name=name, code=room_code, room_name=room_name)
+        room_time = db.child(room_code).get().val()['time']
+        return render_template('room.html', name=name, code=room_code, room_name=room_name, room_time=room_time)
     except:
         return render_template('error.html')
 
