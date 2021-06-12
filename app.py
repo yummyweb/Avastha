@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, make_response
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
 import pyrebase
@@ -23,6 +23,12 @@ config = {
 firebase = pyrebase.initialize_app(config)
 
 app = Flask(__name__)
+
+# Header for bypassing tunnel verification
+@app.after_request
+def add_tunnel_header(resp):
+    resp.headers['Bypass-Tunnel-Reminder']='xxx'
+    return resp
 
 @app.route('/')
 def home():
