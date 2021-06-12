@@ -5,6 +5,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Ropa+Sans&display=swap" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        <link rel="stylesheet" href="../static/styles.css">
     </head>
     <body>
         <nav>
@@ -20,19 +21,16 @@
                 <img id="yoga_pose" style="display: none;" src="https://www.yogajournal.com/wp-content/uploads/2020/03/prasarita-padottanasana.jpg?width=730" alt="Yoga picture">
                 <br>
                 <button id="join_leave">Join room</button>
-            </form>
+            </form>l
+            
             <div id="container" class="container">
-                <div id="local" class="participant"><div></div><div id="tag">Preview</div></div>
+                <div id="local" class="participant"><div><canvas id="canvas" style="position:absolute;top:0;left:0;z-index:1;"></canvas></div><div id="label-container"></div><div id="tag">Preview</div></div>
                 <!-- more participants will be added dynamically here -->
             </div>
         </div>
 
-        <script>
-            document.getElementById("join_leave").addEventListener("click", e => {
-                window.location = "/room?name=" + document.getElementById("username").value + "&code=" + document.getElementById("code").value
-            })
-        </script>
         <script src="//media.twiliocdn.com/sdk/js/video/releases/2.3.0/twilio-video.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
         <script src="{{ url_for('static', filename='app.js') }}"></script>
     </body>
 </html>

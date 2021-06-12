@@ -1,6 +1,4 @@
 let connected = false;
-const usernameInput = document.getElementById('username');
-const roomInput = document.getElementById('code');
 const button = document.getElementById('join_leave');
 const container = document.getElementById('container');
 const count = document.getElementById('count');
@@ -17,8 +15,8 @@ function addLocalVideo() {
 function connectButtonHandler(event) {
     event.preventDefault();
     if (!connected) {
-        let username = usernameInput.value;
-        let room = roomInput.value;
+        let username = "{{name}}";
+        let room = "{{code}}";
         if (!username) {
             alert('Enter your name before connecting');
             return;
@@ -26,11 +24,9 @@ function connectButtonHandler(event) {
         button.disabled = true;
         button.innerHTML = 'Connecting...';
         connect(username, room).then(() => {
-            button.innerHTML = 'Leave call';
             button.disabled = false;
         }).catch(() => {
             alert('Connection failed. Is the backend running?');
-            button.innerHTML = 'Join call';
             button.disabled = false;    
         });
     }
@@ -52,21 +48,12 @@ function connect(username, roomName) {
             return Twilio.Video.connect(data.token);
         }).then(_room => {
             room = _room;
-            document.getElementById("tag").textContent = "Me"
-            usernameInput.style.display = "none"
-            roomInput.style.display = "none"
-            for (let i = 0; i < document.getElementsByTagName("label").length; i++) {
-                document.getElementsByTagName("label")[i].style.display = "none"
-            }
-            document.getElementById("yoga_pose").style.display = "block"
-            changeRoomName(roomName)
             room.participants.forEach(participantConnected);
             room.on('participantConnected', participantConnected);
             room.on('participantDisconnected', participantDisconnected);
             connected = true;
-            init()
             updateParticipantCount();
-            resolve();
+            resolve();a
         }).catch(() => {
             reject();
         });
@@ -142,20 +129,8 @@ function disconnect() {
         container.removeChild(container.lastChild);
     button.innerHTML = 'Join call';
     connected = false;
-    document.getElementById("tag").textContent = "Preview"
-    usernameInput.style.display = "block"
-    roomInput.style.display = "block"
-    for (let i = 0; i < document.getElementsByTagName("label").length; i++) {
-        document.getElementsByTagName("label")[i].style.display = "block"
-    }
-    document.getElementById("yoga_pose").style.display = "none"
-    changeRoomName("Join a Room")
     updateParticipantCount();
 };
-
-function changeRoomName(roomName) {
-    document.getElementById("roomName").textContent = "Room: " + roomName
-}
 
 addLocalVideo();
 button.addEventListener('click', connectButtonHandler);

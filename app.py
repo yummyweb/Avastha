@@ -19,6 +19,12 @@ def home():
 def index():
     return render_template('join.html')
 
+@app.route('/room')
+def room():
+    name = request.args.get("name")
+    room_code = request.args.get("code")
+    return render_template('room.html', name=name, code=room_code)
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template("404.html")
