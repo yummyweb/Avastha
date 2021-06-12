@@ -1,7 +1,7 @@
 let connected = false;
 const button = document.getElementById('join_leave');
 const container = document.getElementById('container');
-const count = document.getElementById('count');
+const timer = document.getElementById('timer')
 let room;
 
 function addLocalVideo() {
@@ -47,6 +47,7 @@ function connect(username) {
             room.on('participantDisconnected', participantDisconnected);
             connected = true;
             updateParticipantCount();
+            startTimer()
             resolve();
         }).catch(() => {
             reject();
@@ -125,6 +126,18 @@ function disconnect() {
     connected = false;
     updateParticipantCount();
 };
+
+
+function startTimer() {
+    let timeLeft = document.getElementById("roomTime").value * 60;
+    setInterval(function(){
+        if(timeLeft <= 0){
+            clearInterval(downloadTimer);
+        }
+        timer.innerText = timeLeft;
+        timeLeft -= 1;
+    }, 1000);
+}
 
 addLocalVideo();
 button.addEventListener('click', connectButtonHandler);

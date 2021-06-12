@@ -33,7 +33,7 @@
             
           </nav>
           <a class="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-center mb-4 md:mb-0">
-            <span class="px-4 py-2  text-base rounded-full text-red-600 border border-red-600 bg-red-200 ">
+            <span id="timer" class="px-4 py-2 text-base rounded-full text-red-600 border border-red-600 bg-red-200 ">
                 1:30
             </span>            
           </a>
@@ -48,6 +48,7 @@
             <form>
                 <input id="roomName" value="{{ room_name }}" type="text" style="display: none;">
                 <input id="userName" value="{{ name }}" type="text" style="display: none;">
+                <input id="roomTime" value="{{ room_time }}" type="text" style="display: none;">
                 <a class="mr-5 hover:text-gray-900 text-m">Code: {{ code }}</a>
                 <img id="yoga_pose" src="https://www.yogajournal.com/wp-content/uploads/2020/03/prasarita-padottanasana.jpg?width=730" style="max-width:300px;" alt="Yoga picture" class="hover:bg-yellow-700">
                 <br/>
