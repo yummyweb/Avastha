@@ -46,7 +46,12 @@ def create():
 def room():
     name = request.args.get("name")
     room_code = request.args.get("code")
-    return render_template('room.html', name=name, code=room_code)
+    db = firebase.database()
+    try:
+        room_name = db.child(room_code).get().val()['room_name']
+        return render_template('room.html', name=name, code=room_code, room_name=room_name)
+    except:
+        return render_template('error.html')
 
 @app.errorhandler(404)
 def not_found(e):
