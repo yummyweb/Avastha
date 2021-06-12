@@ -59,6 +59,41 @@ def login():
 
     return {'token': token.to_jwt().decode()}
 
+@app.route('/score', methods=['POST'])
+def update_score():
+    user_id = request.get_json(force=True).get('user_id')
+    score = request.get_json(force=True).get('score')
+    db = firebase.database()
+    try:
+        user_data = db.child(user_id).get().val()
+        user_data['total_points'] = int(user_data['total_points']) + int(score)
+        user_data['current_points'] = int(score)
+        db.child(user_id).update(user_data)
+        return {'total_points': (int(user_data['total_points']) + int(score))}
+    except:
+        abort(401) # user id doesn't exist
+
+@app.route('/join_room', methods=['POST'])
+def join_room():
+    room_code = request.get_json(force=True).get('room_code')
+    username = request.get_json(force=True).get('username')
+    db = firebase.database()
+    try:
+        room_data = db.child(room_code).get().val()
+        user_id = uuid.uuid4().hex
+        room_data["users"].append(user_id)
+        db.child(room_code).update(room_data)
+        user_data = {
+            "user_id": user_id,
+            "username": username,
+            "total_points": 0,
+            "current_points": 0
+        }
+        db.child(user_id).set(user_data)
+        return {"user_id": user_id}
+    except:
+        abort(401) # room code didn't work
+
 @app.route('/db', methods=['POST'])
 def db_push():
     room_name = request.get_json(force=True).get('room_name')
@@ -72,7 +107,8 @@ def db_push():
         "room_name": room_name,
         "time": time,
         "room_music": room_music,
-        "room_code": room_code
+        "room_code": room_code,
+        "users": []
     }
     db.child(room_code).set(data)
     return {'room_code': room_code}
