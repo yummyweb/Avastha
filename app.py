@@ -107,7 +107,7 @@ def db_push():
     if not room_name or not time or not room_music:
         abort(401)
     db = firebase.database()
-    room_code = uuid.uuid4().hex[:10]
+    room_code = uuid.uuid4().hex[:6]
     data = {
         "room_name": room_name,
         "time": time,
