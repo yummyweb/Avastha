@@ -3,11 +3,24 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, abort
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
+import pyrebase
+import uuid
 
 load_dotenv()
 twilio_account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
 twilio_api_key_sid = os.environ.get('TWILIO_API_KEY_SID')
 twilio_api_key_secret = os.environ.get('TWILIO_API_KEY_SECRET')
+
+config = {
+    "apiKey": "AIzaSyD11TZTHbNeKlrnQwjUEGEBmulWSpp6BC8",
+    "authDomain": "masseyhacks2021-avastha.firebaseapp.com",
+    "databaseURL": "https://masseyhacks2021-avastha-default-rtdb.firebaseio.com",
+    "projectId": "masseyhacks2021-avastha",
+    "storageBucket": "masseyhacks2021-avastha.appspot.com",
+    "serviceAccount": "masseyhacks2021-avastha-firebase-adminsdk.json"
+}
+
+firebase = pyrebase.initialize_app(config)
 
 app = Flask(__name__)
 
@@ -45,3 +58,22 @@ def login():
     token.add_grant(VideoGrant(room=room))
 
     return {'token': token.to_jwt().decode()}
+
+@app.route('/db', methods=['POST'])
+def db_push():
+    room_name = request.get_json(force=True).get('room_name')
+    time = request.get_json(force=True).get('time')
+    room_music = request.get_json(force=True).get('room_music')
+    if not room_name or not time or not room_music:
+        abort(401)
+    db = firebase.database()
+    room_code = uuid.uuid4().hex[:10]
+    data = {
+        "room_name": room_name,
+        "time": time,
+        "room_music": room_music,
+        "room_code": room_code
+    }
+    db.child(room_code).set(data)
+    return {'room_code': room_code}
+    
