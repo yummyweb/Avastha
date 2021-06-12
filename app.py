@@ -19,6 +19,10 @@ def home():
 def index():
     return render_template('join.html')
 
+@app.route('/create')
+def create():
+    return render_template('create.html')
+
 @app.route('/room')
 def room():
     name = request.args.get("name")
