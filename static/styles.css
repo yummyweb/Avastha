@@ -98,6 +98,16 @@ input[type="text"] {
     font-family: 'Ropa Sans', sans-serif;
 }
 
+#pause_play {
+    background: #FF8774;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.3);
+    border: none;
+    font-family: 'Ropa Sans', sans-serif;
+    margin-top: 20px;
+}
+
 form {
     display: flex;
     flex-direction: column;

@@ -8,7 +8,6 @@ let width = 320
 let height = 240;
 let ctx;
 let res_conf;
-var audio = null;
 var twenty_frames = [];
 var counts = {};
 var pose_arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];

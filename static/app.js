@@ -53,7 +53,7 @@ function connect(username, roomName) {
             room.on('participantDisconnected', participantDisconnected);
             connected = true;
             updateParticipantCount();
-            resolve();a
+            resolve();
         }).catch(() => {
             reject();
         });
