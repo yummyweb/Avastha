@@ -59,7 +59,7 @@
                     <input type="radio" id="music-off" name="music-radio" value="off">
                     <label for="music-off">Off</label><br>
                   </div>
-                <button class="text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">Create the Room</button>
+                <button id="create-room" class="text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">Create the Room</button>
                 <p class="text-xs text-gray-500 mt-3">Pro-tip: Always be a good sport and have fun! :D </p>
               </div>
             </div>
@@ -67,30 +67,29 @@
     </div>
 
     <script>
-      const musicRadio = document.getElementsByName("music-radio")
-      let musicOffOrOn
-      for(i = 0; i < musicRadio.length; i++) {
-          if (musicRadio[i].checked) musicOffOrOn = musicRadio[i].checked
-      }
-
-      fetch("/db", {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body:  JSON.stringify({
-          room_name: document.getElementById("room-name").value,
-          time: document.getElementById("time").value,
-          room_music: musicOffOrOn
+      document.getElementById("create-room").addEventListener("click", e => {
+        const musicRadio = document.getElementsByName("music-radio")
+        let musicOffOrOn
+        for (i = 0; i < musicRadio.length; i++) {
+            if (musicRadio[i].checked) musicOffOrOn = musicRadio[i].checked
+        }
+        fetch("/db", {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body:  JSON.stringify({
+            room_name: document.getElementById("room-name").value,
+            time: document.getElementById("time").value,
+            room_music: musicOffOrOn
+          })
         })
-      })
-      .then(res => {
-        console.log("Created room...")
-        res.json()
-        .then(_res => {
-          console.log("Room code: " + _res.room_code)
-          document.getElementById("join_leave").addEventListener("click", e => {
-              window.location = "/room?name=" + document.getElementById("username").value + "&code=" + _res.room_code
+        .then(res => {
+          console.log("Created room...")
+          res.json()
+          .then(_res => {
+            console.log("Room code: " + _res.room_code)
+            window.location = "/room?name=" + document.getElementById("username").value + "&code=" + _res.room_code
           })
         })
       })
