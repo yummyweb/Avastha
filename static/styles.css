@@ -1,0 +1,111 @@
+body {
+    font-family: 'Ropa Sans', sans-serif;
+    background: rgb(245, 245, 245);
+}
+
+.hero {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.hero h1 {
+    font-size: 40px;
+}
+
+.hero p {
+    font-size: 25px;
+}
+
+.hero a {
+    color: gray;
+    font-size: 19px;
+}
+
+.not_found {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100%; 
+}
+
+.not_found h1 {
+    color: gray;
+}
+
+.not_found a {
+    color: gray;
+    font-size: 19px
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.join {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100vw;
+}
+
+.container {
+    margin-top: 50px;
+    width: 120%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.participant div {
+    text-align: center;
+}
+
+.participant div:first-child {
+    width: 320px;
+    height: 240px;
+    border-radius: 10px;
+    background-color: #ccc;
+    border: 1px solid black;
+}
+
+.participant video {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+input[type="text"] {
+    padding: 0.25em 0.5em;
+    border-radius: 4px;
+    font-size: max(16px, 1em);
+    border: 2px solid #8b8a8b;
+    margin-bottom: 20px;
+    width: 50%;
+}
+
+#join_leave {
+    background: #FF8774;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.3);
+    border: none;
+    font-family: 'Ropa Sans', sans-serif;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 90px;
+    width: 100%;
+}
+
+#yoga_pose {
+    width: 300px;
+}
