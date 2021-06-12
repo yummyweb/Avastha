@@ -69,6 +69,7 @@ def update_score():
         user_data['total_points'] = int(user_data['total_points']) + int(score)
         user_data['current_points'] = int(score)
         db.child(user_id).update(user_data)
+        return {'total_points': (int(user_data['total_points']) + int(score))}
     except:
         abort(401) # user id doesn't exist
 
@@ -89,6 +90,7 @@ def join_room():
             "current_points": 0
         }
         db.child(user_id).set(user_data)
+        return {"user_id": user_id}
     except:
         abort(401) # room code didn't work
 
