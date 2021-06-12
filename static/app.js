@@ -8,13 +8,17 @@ function addLocalVideo() {
     Twilio.Video.createLocalVideoTrack().then((track) => {
         let video = document.getElementById("local").firstChild;
         video.appendChild(track.attach());
+<<<<<<< HEAD
         document.getElementsByTagName("video")[0].style.position = "relative";
+=======
+>>>>>>> f47d2b757fd858ec315b0461b43ee2331db7fb13
     });
 }
 
 function connectButtonHandler(event) {
     event.preventDefault();
     if (!connected) {
+<<<<<<< HEAD
         let username = "{{name}}";
         let room = "{{code}}";
         if (!username) {
@@ -32,36 +36,45 @@ function connectButtonHandler(event) {
                 button.disabled = false;
             });
     } else {
+=======
+        button.disabled = true;
+        button.innerHTML = 'Connecting...';
+        connect().then(() => {
+            button.disabled = false;
+            button.innerHTML = "Leave call"
+        }).catch(() => {
+            alert('Connection failed. Is the backend running?');
+            button.disabled = false;
+        });
+    }
+    else {
+>>>>>>> f47d2b757fd858ec315b0461b43ee2331db7fb13
         disconnect();
         button.innerHTML = "Join call";
         connected = false;
     }
 }
 
-function connect(username, roomName) {
+function connect(username) {
     let promise = new Promise((resolve, reject) => {
         // get a token from the back end
-        fetch("/login", {
-            method: "POST",
-            body: JSON.stringify({ username: username, room: roomName }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                // join video call
-                return Twilio.Video.connect(data.token);
-            })
-            .then((_room) => {
-                room = _room;
-                room.participants.forEach(participantConnected);
-                room.on("participantConnected", participantConnected);
-                room.on("participantDisconnected", participantDisconnected);
-                connected = true;
-                updateParticipantCount();
-                resolve();
-            })
-            .catch(() => {
-                reject();
-            });
+        fetch('/login', {
+            method: 'POST',
+            body: JSON.stringify({'username': document.getElementById("userName").value, 'room': document.getElementById("roomName").value})
+        }).then(res => res.json()).then(data => {
+            // join video call
+            return Twilio.Video.connect(data.token);
+        }).then(_room => {
+            room = _room;
+            room.participants.forEach(participantConnected);
+            room.on('participantConnected', participantConnected);
+            room.on('participantDisconnected', participantDisconnected);
+            connected = true;
+            updateParticipantCount();
+            resolve();
+        }).catch(() => {
+            reject();
+        });
     });
     return promise;
 }

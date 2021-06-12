@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, make_response
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
 import pyrebase
@@ -24,6 +24,12 @@ firebase = pyrebase.initialize_app(config)
 
 app = Flask(__name__)
 
+# Header for bypassing tunnel verification
+@app.after_request
+def add_tunnel_header(resp):
+    resp.headers['Bypass-Tunnel-Reminder']='xxx'
+    return resp
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -43,7 +49,8 @@ def room():
     db = firebase.database()
     try:
         room_name = db.child(room_code).get().val()['room_name']
-        return render_template('room.html', name=name, code=room_code, room_name=room_name)
+        room_time = db.child(room_code).get().val()['time']
+        return render_template('room.html', name=name, code=room_code, room_name=room_name, room_time=room_time)
     except:
         return render_template('error.html')
 
