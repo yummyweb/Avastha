@@ -85,11 +85,9 @@ function gotResults(err, result) {
     if (err) {
         console.error(err);
     }
-    console.log(result)
 
     if (result.confidencesByLabel) {
         const confidences = result.confidencesByLabel;
-        console.log(confidences);
 
         let c_a = confidences['A'] * 100;
         let c_b = confidences['B'] * 100;
@@ -99,9 +97,6 @@ function gotResults(err, result) {
         let c_e = confidences['E'] * 100;
         let c_f = confidences['F'] * 100;
         let c_g = confidences['G'] * 100;
-
-        console.log(c_a, c_b, c_c, c_d, c_e, c_f, c_g);
-
 
         var conf = [];
         conf.push(c_a);
@@ -113,10 +108,8 @@ function gotResults(err, result) {
         conf.push(c_g);
 
         let mx_indx = conf.indexOf(Math.max(...conf));
-        console.log(mx_indx);
 
         twenty_frames.push(pose_arr[mx_indx]);
-        console.log(pose_arr[mx_indx]);
         counts[pose_arr[mx_indx]] += 1;
 
         if (twenty_frames.length > 20) {
@@ -135,12 +128,8 @@ function gotResults(err, result) {
 
             counts[last_frame] -= 1;
 
-            console.log("res" + res)
-
             if (prev_sound != res) {
                 p_name = poses_name[sound_no - 1];
-
-                console.log("poses" + p_name)
             }
         }
     }

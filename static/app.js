@@ -8,26 +8,20 @@ function addLocalVideo() {
     Twilio.Video.createLocalVideoTrack().then(track => {
         let video = document.getElementById('local').firstChild;
         video.appendChild(track.attach());
-        document.getElementsByTagName("video")[0].style.position = "relative"
     });
 };
 
 function connectButtonHandler(event) {
     event.preventDefault();
     if (!connected) {
-        let username = "{{name}}";
-        let room = "{{code}}";
-        if (!username) {
-            alert('Enter your name before connecting');
-            return;
-        }
         button.disabled = true;
         button.innerHTML = 'Connecting...';
-        connect(username, room).then(() => {
+        connect().then(() => {
             button.disabled = false;
+            button.innerHTML = "Leave call"
         }).catch(() => {
             alert('Connection failed. Is the backend running?');
-            button.disabled = false;    
+            button.disabled = false;
         });
     }
     else {
@@ -37,12 +31,12 @@ function connectButtonHandler(event) {
     }
 };
 
-function connect(username, roomName) {
+function connect(username) {
     let promise = new Promise((resolve, reject) => {
         // get a token from the back end
         fetch('/login', {
             method: 'POST',
-            body: JSON.stringify({'username': username, 'room': roomName})
+            body: JSON.stringify({'username': document.getElementById("userName").value, 'room': document.getElementById("roomName").value})
         }).then(res => res.json()).then(data => {
             // join video call
             return Twilio.Video.connect(data.token);
