@@ -8,6 +8,7 @@ function addLocalVideo() {
     Twilio.Video.createLocalVideoTrack().then((track) => {
         let video = document.getElementById("local").firstChild;
         video.appendChild(track.attach());
+        document.getElementsByTagName('video')[0].style.display = "none"
     });
 }
 
@@ -54,6 +55,7 @@ function connect(username) {
                 room.on("participantDisconnected", participantDisconnected);
                 connected = true;
                 updateParticipantCount();
+                startTimer()
                 resolve();
             })
             .catch(() => {
@@ -146,10 +148,10 @@ function disconnect() {
 
 
 function startTimer() {
-    let timeLeft = document.getElementById("roomTime").value * 60;
-    setInterval(function(){
+    timeLeft = parseInt(document.getElementById("roomTime").value) * 60;
+    let intervalTimer = setInterval(function(){
         if(timeLeft <= 0){
-            clearInterval(downloadTimer);
+            clearInterval(intervalTimer);
         }
         timer.innerText = timeLeft;
         timeLeft -= 1;
