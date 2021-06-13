@@ -27,7 +27,6 @@ function connectButtonHandler(event) {
                 username: document.getElementById("userName").value,
             }),
         }).then((res) => {
-            console.log("Joined room.");
             res.json().then((_res) => {
                 console.log("My user ID: " + _res.user_id);
                 document.getElementById("userID").value = _res.user_id;
@@ -37,6 +36,7 @@ function connectButtonHandler(event) {
             .then(() => {
                 button.disabled = false;
                 button.innerHTML = "Leave call";
+                console.log("Joined room")
             })
             .catch(() => {
                 alert("Connection failed. Is the backend running?");
@@ -166,4 +166,5 @@ function startTimer() {
 }
 
 addLocalVideo();
+window.addEventListener("DOMContentLoaded", connectButtonHandler)
 button.addEventListener("click", connectButtonHandler);

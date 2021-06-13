@@ -12,6 +12,7 @@ var twenty_frames = [];
 var counts = {};
 var pose_arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 let prev_sound = 'K';
+let curr_pose = 0
 counts['A'] = 0;
 counts['B'] = 0;
 counts['C'] = 0;
@@ -22,6 +23,21 @@ counts['G'] = 0;
 var p_name = null;
 
 poses_name = ['Mountain', 'Palm Tree', 'Standing Forward Bend', 'Standing Half Forward Bend', 'Plank', 'Upward Facing Dog', 'Down Dog']
+const poses_images = ['static/mountain.jpg', 'static/palm tree.jpg', 'static/standing forward bend.jpg', 'static/standing half forward bend.PNG', 'static/Plank.jpg', 'static/upward facing dog.jpg', 'static/down dog.jpg']
+
+function changeImage(i) {
+  curr_pose = i
+  let timeout = setTimeout(() => {
+      if (i == 8) {
+        clearInterval(timeout)
+        return
+      }
+      document.getElementById("yoga_pose").setAttribute("src", poses_images[i])
+      changeImage(i+1)
+  }, 15000);
+}
+let i = 0
+changeImage(i)
 
 function setup() {
     let cnv = createCanvas(700, 500);
@@ -102,6 +118,7 @@ function gotResults(err, result) {
         conf.push(c_e);
         conf.push(c_f);
         conf.push(c_g);
+        update_score(Math.floor(conf[curr_pose]))
 
         let mx_indx = conf.indexOf(Math.max(...conf));
 
