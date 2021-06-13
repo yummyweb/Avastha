@@ -1,3 +1,5 @@
+// all of this is basically irrelevant now since we are doing it all server side instead
+
 let database =
     "https://masseyhacks2021-avastha-default-rtdb.firebaseio.com/.json";
 let evtSource = new EventSource(database);
@@ -15,6 +17,8 @@ evtSource.addEventListener(
         db_update = JSON.parse(e.data).data;
         if ("time" in db_update) {
             room_event(db_update); // runs this every time there is an event in a room and just shows specific room/event
+        } else if ("username" in db_update) {
+            room_event();
         } else {
             for (let key in db_update) {
                 room_event(db_update[key]); // runs this every time there is a new room or on page load

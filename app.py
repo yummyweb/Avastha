@@ -74,16 +74,17 @@ def login():
 @app.route('/score', methods=['POST'])
 def update_score():
     user_id = request.get_json(force=True).get('user_id')
+    room_code = request.get_json(force=True).get('room_code')
     score = request.get_json(force=True).get('score')
     db = firebase.database()
     try:
-        user_data = db.child(user_id).get().val()
+        user_data = db.child(room_code).child('users').child(user_id).get().val()
         user_data['total_points'] = int(user_data['total_points']) + int(score)
         user_data['current_points'] = int(score)
-        db.child(user_id).update(user_data)
-        return {'total_points': (int(user_data['total_points']) + int(score))}
+        db.child(room_code).child('users').child(user_id).update(user_data)
+        return db.child(room_code).child('users').get().val()
     except:
-        abort(401) # user id doesn't exist
+        abort(401) # room code didn't work
 
 @app.route('/join_room', methods=['POST'])
 def join_room():
@@ -91,17 +92,14 @@ def join_room():
     username = request.get_json(force=True).get('username')
     db = firebase.database()
     try:
-        room_data = db.child(room_code).get().val()
         user_id = uuid.uuid4().hex
-        room_data["users"].append(user_id)
-        db.child(room_code).update(room_data)
         user_data = {
             "user_id": user_id,
             "username": username,
             "total_points": 0,
             "current_points": 0
         }
-        db.child(user_id).set(user_data)
+        db.child(room_code).child('users').child(user_id).set(user_data)
         return {"user_id": user_id}
     except:
         abort(401) # room code didn't work
@@ -120,7 +118,9 @@ def db_push():
         "time": time,
         "room_music": room_music,
         "room_code": room_code,
-        "users": []
+        "users": {
+            '0': "EMPTY"
+        }
     }
     db.child(room_code).set(data)
     return {'room_code': room_code}
