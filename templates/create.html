@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <!-- ... -->
+</head>
+<body>
+    <header class="text-gray-600 body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+          <nav class="flex lg:w-2/5 flex-wrap items-center text-base md:ml-auto">
+            <a class="mr-5 hover:text-gray-900">Home</a>
+          </nav>
+          <a class="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-center mb-4 md:mb-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-yellow-500 rounded-full" viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            <span class="ml-3 text-xl">Avastha</span>
+          </a>
+          <div class="lg:w-2/5 inline-flex lg:justify-end ml-5 lg:ml-0">
+            <a href="https://google.com"><button class="inline-flex items-center bg-yellow-100 border-0 py-1 px-3 focus:outline-none hover:bg-yellow-200 rounded text-base mt-4 md:mt-0">Join a Room
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </button></a>
+          </div>
+        </div>
+      </header>
+      <div class="p-5">
+        <section class="text-gray-600 body-font">
+            <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
+              <div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
+                <h1 class="title-font font-medium text-3xl text-gray-900">Slow-carb next level shoindcgoitch ethical authentic, poko scenester</h1>
+                <p class="leading-relaxed mt-4">Poke slow-carb mixtape knausgaard, typewriter street art gentrify hammock starladder roathse. Craies vegan tousled etsy austin.</p>
+              </div>
+              <div class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
+                <h2 class="text-gray-900 text-lg font-medium title-font mb-5">Make a Room</h2>
+                <div class="relative mb-4">
+                  <label for="name" class="leading-7 text-sm text-gray-600">Name</label>
+                  <input type="text" id="name" name="full-name" class="w-full bg-white rounded border border-gray-300 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                </div>
+                <div class="relative mb-4">
+                  <label for="room-name" class="leading-7 text-sm text-gray-600">Room Name</label>
+                  <input type="text" id="room-name" name="room-name" class="w-full bg-white rounded border border-gray-300 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                </div>
+                <div class="relative mb-4">
+                    <label for="difficulty" class="leading-7 text-sm text-gray-600">Difficulty (from 1-3)</label>
+                    <input type="range" id="difficulty" name="difficulty" min="1" max="3" class="w-full bg-white rounded border border-gray-300 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                  </div>
+                  <div class="relative mb-4">
+                    <label for="time" class="leading-7 text-sm text-gray-600">Time (from 1-10min)</label>
+                    <input type="number" id="time" name="time" class="w-full bg-white rounded border border-gray-300 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                  </div>
+                  <div class="relative mb-4">
+                    <label for="time" class="leading-7 text-sm text-gray-600">Music?</label>
+                    <input type="radio" id="music-on" name="music-radio" value="on">
+                    <label for="music-on">On</label>
+                    <input type="radio" id="music-off" name="music-radio" value="off">
+                    <label for="music-off">Off</label><br>
+                  </div>
+                <button id="create-room" class="text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">Create the Room</button>
+                <p class="text-xs text-gray-500 mt-3">Pro-tip: Always be a good sport and have fun! :D </p>
+              </div>
+            </div>
+          </section>
+    </div>
+
+    <script>
+      document.getElementById("create-room").addEventListener("click", e => {
+        const musicRadio = document.getElementsByName("music-radio")
+        let musicOffOrOn
+        for (i = 0; i < musicRadio.length; i++) {
+            if (musicRadio[i].checked) musicOffOrOn = musicRadio[i].checked
+        }
+        fetch("/db", {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body:  JSON.stringify({
+            room_name: document.getElementById("room-name").value,
+            time: document.getElementById("time").value,
+            room_music: musicOffOrOn
+          })
+        })
+        .then(res => {
+          console.log("Created room...")
+          res.json()
+          .then(_res => {
+            console.log("Room code: " + _res.room_code)
+            window.location = "/room?name=" + document.getElementById("username").value + "&code=" + _res.room_code
+          })
+        })
+      })
+    </script>
+</body>
+</html>
