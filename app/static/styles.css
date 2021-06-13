@@ -23,3 +23,7 @@
     height: 100%;
     border-radius: 10px;
 }
+
+canvas {
+    margin-left: 20px;
+}
