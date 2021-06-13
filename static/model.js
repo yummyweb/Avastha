@@ -29,19 +29,21 @@ function changeImage(i) {
   curr_pose = i
   let timeout = setTimeout(() => {
       if (i == 8) {
-        clearInterval(timeout)
-        return
+        console.log("Repeating images")
+        i = 0
       }
       document.getElementById("yoga_pose").setAttribute("src", poses_images[i])
       changeImage(i+1)
-  }, 15000);
+  }, 8000);
 }
 let i = 0
 changeImage(i)
 
 function setup() {
-    let cnv = createCanvas(700, 500);
+    let cnv = createCanvas(width, height);
     cnv.position(330, 70);
+
+    document.querySelector("canvas").style.position = ""
 
     video = createCapture(VIDEO);
     video.size(width, height);
@@ -118,7 +120,10 @@ function gotResults(err, result) {
         conf.push(c_e);
         conf.push(c_f);
         conf.push(c_g);
-        update_score(Math.floor(conf[curr_pose]))
+
+        setTimeout(() => {
+            const scores = update_score(Math.floor(conf[curr_pose]))
+        }, 3000)
 
         let mx_indx = conf.indexOf(Math.max(...conf));
 
@@ -134,15 +139,6 @@ function gotResults(err, result) {
                     maxi = counts[twenty_frames[i]];
                     res = twenty_frames[i];
                 }
-            }
-            last_frame = twenty_frames.shift();
-
-            sound_no = pose_arr.indexOf(res) + 1;
-
-            counts[last_frame] -= 1;
-
-            if (prev_sound != res) {
-                p_name = poses_name[sound_no - 1];
             }
         }
     }

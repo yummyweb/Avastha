@@ -115,8 +115,12 @@ function participantConnected(participant) {
     participantDiv.appendChild(tracksDiv);
 
     let labelDiv = document.createElement("div");
+    let pointsDiv = document.createElement("div");
+    pointsDiv.setAttribute("class", "points")
+
     labelDiv.innerHTML = participant.identity;
     participantDiv.appendChild(labelDiv);
+    participantDiv.appendChild(pointsDiv);
 
     container.appendChild(participantDiv);
 

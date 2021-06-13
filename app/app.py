@@ -124,4 +124,3 @@ def db_push():
     }
     db.child(room_code).set(data)
     return {'room_code': room_code}
-    
