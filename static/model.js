@@ -22,6 +22,7 @@ counts['G'] = 0;
 var p_name = null;
 
 poses_name = ['Mountain', 'Palm Tree', 'Standing Forward Bend', 'Standing Half Forward Bend', 'Plank', 'Upward Facing Dog', 'Down Dog']
+poses_images = []
 
 function setup() {
     let cnv = createCanvas(700, 500);
