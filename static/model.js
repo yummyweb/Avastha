@@ -22,7 +22,6 @@ counts['G'] = 0;
 var p_name = null;
 
 poses_name = ['Mountain', 'Palm Tree', 'Standing Forward Bend', 'Standing Half Forward Bend', 'Plank', 'Upward Facing Dog', 'Down Dog']
-poses_images = []
 
 function setup() {
     let cnv = createCanvas(700, 500);
@@ -57,10 +56,6 @@ function draw() {
     // We can call both functions to draw all keypoints and the skeletons
     drawKeypoints();
     drawSkeleton();
-    if (p_name != null) {
-        textSize(32);
-        text(p_name, 10, 30);
-    }
 }
 
 // Predict the current frame.

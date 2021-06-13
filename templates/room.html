@@ -34,7 +34,7 @@
           </nav>
           <a class="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-center mb-4 md:mb-0">
             <span id="timer" class="px-4 py-2 text-base rounded-full text-red-600 border border-red-600 bg-red-200 ">
-                1:30
+                000
             </span>            
           </a>
           <div class="lg:w-2/5 inline-flex lg:justify-end ml-5 lg:ml-0">
@@ -65,6 +65,22 @@
       </div>
 
     <script>
+        const poses_images = ['static/mountain.jpg', 'static/palm tree.jpg', 'static/standing forward bend.jpg', 'static/standing half forward bend.PNG', 'static/Plank.jpg', 'static/upward facing dog.jpg', 'static/down dog.jpg']
+
+        function changeImage(i) {
+          let timeout = setTimeout(() => {
+              if (i == 8) {
+                clearInterval(timeout)
+                return
+              }
+              console.log("changing image")
+              document.getElementById("yoga_pose").setAttribute("src", poses_images[i])
+              changeImage(i+1)
+          }, 15000);
+        }
+        var i = 0
+        changeImage(i)
+
         function update_score(current_points) {
             fetch("/score", {
                 method: "POST",
