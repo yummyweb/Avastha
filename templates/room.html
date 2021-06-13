@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="{{ url_for('static', filename='p5.min.js') }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+  <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js" type="text/javascript"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap%27');
+    body{
+        font-family: 'Inter';
+        font-weight: 600;
+    }
+    .text-xl{
+        font-size: 2rem;
+    }
+    .text-l{
+        font-size: 1.5rem;
+    }
+    .text-m{
+        font-size: 1.3rem;
+    }
+  </style>
+  <!-- ... -->
+</head>
+<body>
+    <header class="text-gray-600 body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+          <nav class="flex lg:w-2/5 flex-wrap items-center text-base md:ml-auto">
+            <a class="mr-5 hover:text-gray-900 text-l">Room: {{ room_name }}</a><br/>
+            
+          </nav>
+          <a class="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-center mb-4 md:mb-0">
+            <span id="timer" class="px-4 py-2 text-base rounded-full text-red-600 border border-red-600 bg-red-200 ">
+                000
+            </span>            
+          </a>
+          <div class="lg:w-2/5 inline-flex lg:justify-end ml-5 lg:ml-0">
+            <span class="ml-3 text-xl">Avastha</span>
+          </div>
+        </div>
+      </header>
+      <div class="pl-20 pr-20 pt-10">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="join">
+            <form>
+                <input id="roomName" value="{{ room_name }}" type="text" style="display: none;">
+                <input id="userName" value="{{ name }}" type="text" style="display: none;">
+                <input id="roomTime" value="{{ room_time }}" type="text" style="display: none;">
+                <input id="userID" value="" type="text" style="display: none;">
+                <a class="mr-5 hover:text-gray-900 text-m" id="roomCode">Code: {{ code }}</a>
+                <img id="yoga_pose" src="https://www.yogajournal.com/wp-content/uploads/2020/03/prasarita-padottanasana.jpg?width=730" style="max-width:300px;" alt="Yoga picture" class="hover:bg-yellow-700">
+                <br/>
+                <button class="text-white width-1/6 bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" id="join_leave">Leave room</button>
+                <button class="text-white width-1/6 pause bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded" id="pause_play">Pause audio</button>
+            </form>
+        </div>
+        <div id="container" class="container">
+            <div id="local" class="participant"><div></div></div>
+            <!-- more participants will be added dynamically here -->
+        </div>
+      </div>
+      </div>
+
+    <script>
+        function update_score(current_points) {
+            fetch("/score", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    room_code: document.getElementById("roomCode").innerHTML.split(": ")[1],
+                    user_id: document.getElementById("userID").value,
+                    score: current_points,
+                }),
+            }).then((res) => {
+                console.log("Updated score.");
+                res.json().then((_res) => {
+                    for (let key in _res) {
+                        if (_res.hasOwnProperty(key)) {
+                            if (_res[key].total_points) {
+                                if (Object.keys(_res)[0] === _res[key]) {
+                                    const tag = document.querySelector(".tag")
+                                    tag.innerHTML = _res[key].total_points
+                                }
+                                else {
+                                    const pointsDiv = document.querySelector("#" + document.getElementById("userID").value)
+                                    pointsDiv.innerHTML = _res[key].total_points
+                                    Toastify({
+                                        text: _res[key].total_points,
+                                        duration: 3000,
+                                        close: true,
+                                        gravity: "bottom", // `top` or `bottom`
+                                        position: "right", // `left`, `center` or `right`
+                                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                                        onClick: function () {}, // Callback after click
+                                    }).showToast();
+                                }
+                            }
+                        }
+                    }
+                    for (let i = 0; i < Object.keys(_res).length; i++) {
+                        const pointsDivs = document.getElementsByClassName("points")
+                        if (i > pointsDivs.length+1) {
+                            break
+                        }
+                        const key = Object.keys(_res)[i]
+                        const user = _res[Object.keys(_res)[i]]
+                        console.log(user)
+                        if (user.total_points) {
+                            console.log(user)
+                            console.log(document.getElementsByClassName("points")[i])
+                            document.getElementsByClassName("points")[i].innerHTML = user.total_points
+                        }
+                    }
+                });
+            });
+        }
+
+        const audio = new Audio('static/audio.mp3');
+        audio.play();
+        const musicBtn = document.getElementById("pause_play")
+        musicBtn.addEventListener("click", e => {
+            if (musicBtn.classList.contains("pause")) {
+                musicBtn.classList.remove("pause")
+                musicBtn.classList.add("play")
+                audio.pause()
+            }
+            else {
+                musicBtn.classList.remove("play")
+                musicBtn.classList.add("pause")
+                audio.play()
+            }
+        })
+    </script>
+    <script src="//media.twiliocdn.com/sdk/js/video/releases/2.3.0/twilio-video.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="{{ url_for('static', filename='model.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <div class="points" style="margin-top: 20px;"></div>
+</body>
+</html>
