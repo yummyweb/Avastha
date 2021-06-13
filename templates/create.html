@@ -89,7 +89,7 @@
           res.json()
           .then(_res => {
             console.log("Room code: " + _res.room_code)
-            window.location = "/room?name=" + document.getElementById("username").value + "&code=" + _res.room_code
+            window.location = "/room?name=" + document.getElementById("name").value + "&code=" + _res.room_code
           })
         })
       })

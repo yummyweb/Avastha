@@ -1,7 +1,7 @@
 let connected = false;
-const button = document.getElementById('join_leave');
-const container = document.getElementById('container');
-const timer = document.getElementById('timer')
+const button = document.getElementById("join_leave");
+const container = document.getElementById("container");
+const timer = document.getElementById("timer");
 let room;
 
 function addLocalVideo() {
@@ -16,6 +16,22 @@ function connectButtonHandler(event) {
     if (!connected) {
         button.disabled = true;
         button.innerHTML = "Connecting...";
+        fetch("/join_room", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                room_code: document.getElementById("roomCode").innerHTML.split(": ")[1],
+                username: document.getElementById("userName").value,
+            }),
+        }).then((res) => {
+            console.log("Joined room.");
+            res.json().then((_res) => {
+                console.log("My user ID: " + _res.user_id);
+                document.getElementById("userID").value = _res.user_id;
+            });
+        });
         connect()
             .then(() => {
                 button.disabled = false;
@@ -111,14 +127,6 @@ function participantConnected(participant) {
     );
     participant.on("trackUnsubscribed", trackUnsubscribed);
 
-    room.localParticipant.audioTracks.forEach((track) => {
-        track.disable();
-    });
-
-    room.localParticipant.videoTracks.forEach((track) => {
-        track.disable();
-    });
-
     updateParticipantCount();
 }
 
@@ -144,11 +152,10 @@ function disconnect() {
     updateParticipantCount();
 }
 
-
 function startTimer() {
     let timeLeft = document.getElementById("roomTime").value * 60;
-    setInterval(function(){
-        if(timeLeft <= 0){
+    setInterval(function () {
+        if (timeLeft <= 0) {
             clearInterval(downloadTimer);
         }
         timer.innerText = timeLeft;
